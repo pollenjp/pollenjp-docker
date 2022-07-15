@@ -21,9 +21,6 @@ TARGET_NAME_BASE := pollenjp-docker
 DOCKERFILE_DIR := .
 USER_NAME :=
 
-# specify
-NEXUS_COMMAND_PATH :=
-
 SHELL := /bin/bash
 #.DEFAULT_GOAL := cuda11.1.1-cudnn8-devel-ubuntu18.04
 .DEFAULT_GOAL := help
