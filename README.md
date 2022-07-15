@@ -1,8 +1,20 @@
 # ssh-container
 
-## ToC
+## 1. ToC
 
-## docker network
+<!-- TOC -->
+
+- [1. ToC](#1-toc)
+- [2. docker network](#2-docker-network)
+- [3. Dockerfile](#3-dockerfile)
+  - [3.1. minimum1](#31-minimum1)
+  - [3.2. minimum2](#32-minimum2)
+- [4. test](#4-test)
+- [5. network](#5-network)
+
+<!-- /TOC -->
+
+## 2. docker network
 
 ```sh
 docker network create \
@@ -12,9 +24,9 @@ docker network create \
     pollen-net
 ```
 
-## Dockerfile
+## 3. Dockerfile
 
-### minimum1
+### 3.1. minimum1
 
 - build 時には user 以下を作成せず, run 時に `ENTRYPOINT` の shell script を元に user 以下を作成する.
 - example
@@ -87,13 +99,30 @@ docker network create \
           pollenjp-docker-base1-cuda11.2.2-cudnn8-devel-ubuntu18.04
       ```
 
-### minimum2
+### 3.2. minimum2
 
 - container で user 以下に pyenv を生成してから, user ディレクトリ以下のUID等を変更する
 
-## test
+## 4. test
 
 ```sh
 make create-test-docker-network
 test-docker-base1-build-and-run
+```
+
+## 5. network
+
+```sh
+ % docker network create --driver=bridge --subnet=172.20.0.0/16 --gateway=172.20.255.254 xxx-net
+```
+
+docker imageをrunする際にネットワークと固定するIPを指定 (`--network="xxx-net" --ip=172.20.xxx.xxx`)
+
+注意
+
+- `--subnet`と`--gateway`を両方指定してnetworkを作成しないと以下のようなエラーがでる
+
+```sh
+ % docker run --network="xxx-net" --ip=172.20.xxx.xxx ...
+docker: Error response from daemon: user specified IP address is supported only when connecting to networks with user configured subnets.
 ```
