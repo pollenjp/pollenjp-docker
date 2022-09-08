@@ -8,7 +8,6 @@
 - [docker network](#docker-network)
 - [Dockerfile](#dockerfile)
   - [minimum1](#minimum1)
-  - [minimum2](#minimum2)
 - [test](#test)
 - [network](#network)
 
@@ -58,38 +57,18 @@ docker network create \
       --detach \
       --restart=always \
       --network=<network> \
-      --ip=172.20.0.XXX \
+      --ip=172.20.<XXX>.<YYY> \
       --gpus all \
       --env NVIDIA_DRIVER_CAPABILITIES=all \
-      --env LOCAL_USER_NAME=$(id --user --name) \
-      --env LOCAL_USER_ID=$(id --user) \
-      --env LOCAL_GROUP_NAME=$(id --group --name) \
-      --env LOCAL_GROUP_ID=$(id --group) \
-      --volume ${HOME}/workdir:${HOME}/workdir/ \
+      --env LOCAL_USER_NAME="$(id --user --name)" \
+      --env LOCAL_USER_ID="$(id --user)" \
+      --env LOCAL_GROUP_NAME="$(id --group --name)" \
+      --env LOCAL_GROUP_ID="$(id --group)" \
+      --volume "${HOME}/workdir":"${HOME}/workdir/" \
       --volume /media:/media \
       --name=<container-name> \
       <docker-image-name>
     ```
-
-    - example
-
-      ```sh
-      docker run \
-          --detach \
-          --restart=always \
-          --network=pollen-net \
-          --ip=172.20.0.XX \
-          --gpus all \
-          --env NVIDIA_DRIVER_CAPABILITIES=all \
-          --env LOCAL_USER_NAME=$(id --user --name) \
-          --env LOCAL_USER_ID=$(id --user) \
-          --env LOCAL_GROUP_NAME=$(id --group --name) \
-          --env LOCAL_GROUP_ID=$(id --group) \
-          --volume ${HOME}/workdir:${HOME}/workdir/ \
-          --volume /media:/media \
-          --name=pollen01 \
-          pollenjp-docker-base1-cuda11.2.2-cudnn8-devel-ubuntu18.04
-      ```
 
 ## test
 
