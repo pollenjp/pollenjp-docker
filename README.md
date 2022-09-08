@@ -62,7 +62,6 @@ docker network create \
       --env NVIDIA_DRIVER_CAPABILITIES=all \
       --env LOCAL_USER_NAME="$(id --user --name)" \
       --env LOCAL_USER_ID="$(id --user)" \
-      --env LOCAL_GROUP_NAME="$(id --group --name)" \
       --env LOCAL_GROUP_ID="$(id --group)" \
       --volume "${HOME}/workdir":"${HOME}/workdir/" \
       --volume /media:/media \
