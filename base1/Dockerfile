@@ -17,6 +17,8 @@ FROM nvidia/cuda:${CUDA_VERSION}-ubuntu${UBUNTU_VERSION}
 
 SHELL ["/bin/bash", "-c"]
 
+ENV DEBIAN_FRONTEND "noninteractive"
+ENV TZ "Asia/Tokyo"
 RUN apt-get update -y \
     && \
     apt-get install -y --no-install-recommends \
@@ -57,47 +59,12 @@ RUN apt-get update -y \
     # clean
     apt-get clean
 
-SHELL ["/usr/bin/zsh", "-c"]
-
 # ssh & supervisor
 RUN mkdir -p /var/run/sshd /var/log/supervisor
 
 # <https://stackoverflow.com/questions/36292317/why-set-visible-now-in-etc-profile>
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
-
-######################
-# pyenv requirements #
-######################
-
-# * tk-dev
-#   * setting for `tzdata`
-#   * <https://serverfault.com/a/84528>
-#   * <https://qiita.com/yagince/items/deba267f789604643bab>
-ENV DEBIAN_FRONTEND "noninteractive"
-RUN echo Asia/Tokyo > /etc/timezone
-# * <https://github.com/pyenv/pyenv/wiki/common-build-problems>
-RUN apt-get update -y \
-    && \
-    apt-get install -y \
-    make \
-    build-essential \
-    libssl-dev \
-    zlib1g-dev \
-    libbz2-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    wget \
-    curl \
-    llvm \
-    libncurses5-dev \
-    libncursesw5-dev \
-    xz-utils \
-    tk-dev \
-    libffi-dev \
-    liblzma-dev \
-    && \
-    apt-get clean
 
 USER root
 WORKDIR /

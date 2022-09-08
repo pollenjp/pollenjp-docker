@@ -1,20 +1,20 @@
 # ssh-container
 
-## 1. ToC
+## ToC
 
 <!-- TOC -->
 
-- [1. ToC](#1-toc)
-- [2. docker network](#2-docker-network)
-- [3. Dockerfile](#3-dockerfile)
-  - [3.1. minimum1](#31-minimum1)
-  - [3.2. minimum2](#32-minimum2)
-- [4. test](#4-test)
-- [5. network](#5-network)
+- [ToC](#toc)
+- [docker network](#docker-network)
+- [Dockerfile](#dockerfile)
+  - [minimum1](#minimum1)
+  - [minimum2](#minimum2)
+- [test](#test)
+- [network](#network)
 
 <!-- /TOC -->
 
-## 2. docker network
+## docker network
 
 ```sh
 docker network create \
@@ -24,9 +24,9 @@ docker network create \
     pollen-net
 ```
 
-## 3. Dockerfile
+## Dockerfile
 
-### 3.1. minimum1
+### minimum1
 
 - build 時には user 以下を作成せず, run 時に `ENTRYPOINT` の shell script を元に user 以下を作成する.
 - example
@@ -41,22 +41,14 @@ docker network create \
 
     | CUDA_VERSION        | UBUNTU_VERSION |
     |---------------------|----------------|
-    | 9.2-cudnn7-devel    | 18.04          |
-    | 10.1-cudnn8-devel   | 18.04          |
-    | 11.1-cudnn8-devel   | 18.04          |
-    | 11.1.1-cudnn8-devel | 18.04          |
+    | 11.2.2-cudnn8-devel | 20.04          |
 
   - build container
 
     ```sh
-    make docker-build-base1-cuda11.2.2-cudnn8-devel-ubuntu18.04
-    ```
-
-    ```sh
-    make docker-build-base1 \
-      DOCKERFILE_DIR=./base1 \
-      CUDA_VERSION=9.2-cudnn7-devel \
-      UBUNTU_VERSION=18.04
+    make docker-build-base1-template \
+      CUDA_VERSION=11.2.2-cudnn8-devel \
+      UBUNTU_VERSION=20.04
     ```
 
   - run
@@ -99,18 +91,14 @@ docker network create \
           pollenjp-docker-base1-cuda11.2.2-cudnn8-devel-ubuntu18.04
       ```
 
-### 3.2. minimum2
-
-- container で user 以下に pyenv を生成してから, user ディレクトリ以下のUID等を変更する
-
-## 4. test
+## test
 
 ```sh
 make create-test-docker-network
 test-docker-base1-build-and-run
 ```
 
-## 5. network
+## network
 
 ```sh
  % docker network create --driver=bridge --subnet=172.20.0.0/16 --gateway=172.20.255.254 xxx-net
