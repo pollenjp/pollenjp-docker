@@ -21,7 +21,7 @@ docker network create \
     --driver=bridge \
     --subnet=172.20.0.0/16 \
     --gateway=172.20.255.254 \
-    pollen-net
+    pollenjp-docker-net
 ```
 
 ## 3. Dockerfile
@@ -85,7 +85,7 @@ docker network create \
       docker run \
           --detach \
           --restart=always \
-          --network=pollen-net \
+          --network=pollenjp-docker-net \
           --ip=172.20.0.XX \
           --gpus all \
           --env NVIDIA_DRIVER_CAPABILITIES=all \
