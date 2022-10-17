@@ -12,7 +12,7 @@ permissions:
 jobs:
   release_tag:
     permissions:
-      contents: read
+      contents: write
       packages: write
     runs-on: ubuntu-latest
     steps:
@@ -31,10 +31,6 @@ jobs:
         run: |
           git tag v${{ steps.version.outputs.version }}
           git push origin v${{ steps.version.outputs.version }}
-
-  ################
-  # docker build #
-  ################
 
   docker:
     permissions:
@@ -79,5 +75,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest-ubuntu${{ matrix.ubuntu_version }}
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ steps.version.outputs.version }}-ubuntu${{ matrix.ubuntu_version }}
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest-cuda${{ matrix.cuda_version }}-ubuntu${{ matrix.ubuntu_version }}
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ steps.version.outputs.version }}-cuda${{ matrix.cuda_version }}-ubuntu${{ matrix.ubuntu_version }}
