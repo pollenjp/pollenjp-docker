@@ -32,17 +32,19 @@ jobs:
           git tag v${{ steps.version.outputs.version }}
           git push origin v${{ steps.version.outputs.version }}
 
-  docker:
+  docker-build-push:
     permissions:
       contents: read
       packages: write
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 6
       matrix:
         ubuntu_version:
           - 18.04
+          - 20.04
         cuda_version:
-          - 11.6.1-cudnn8-devel
+          - 11.6.2-cudnn8-devel
 
     steps:
       - name: Checkout
