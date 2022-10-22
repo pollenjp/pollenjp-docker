@@ -1,20 +1,20 @@
-# ssh-container
+# pollenjp-docker
 
-## 1. ToC
+## ToC
 
 <!-- TOC -->
 
-- [1. ToC](#1-toc)
-- [2. docker network](#2-docker-network)
-- [3. Dockerfile](#3-dockerfile)
-  - [3.1. minimum1](#31-minimum1)
-  - [3.2. minimum2](#32-minimum2)
-- [4. test](#4-test)
-- [5. network](#5-network)
+- [ToC](#toc)
+- [docker network](#docker-network)
+- [pull containers from ghcr](#pull-containers-from-ghcr)
+- [Self-build](#self-build)
+  - [docker build](#docker-build)
 
 <!-- /TOC -->
 
-## 2. docker network
+## docker network
+
+Create some private network to fix static IP.
 
 ```sh
 docker network create \
@@ -24,105 +24,50 @@ docker network create \
     pollenjp-docker-net
 ```
 
-## 3. Dockerfile
-
-### 3.1. minimum1
-
-- build 時には user 以下を作成せず, run 時に `ENTRYPOINT` の shell script を元に user 以下を作成する.
-- example
-  - test
-
-    ```sh
-    make test-docker-base1-build-and-run
-    ```
-
-- run
-  - compatible table
-
-    | CUDA_VERSION        | UBUNTU_VERSION |
-    |---------------------|----------------|
-    | 9.2-cudnn7-devel    | 18.04          |
-    | 10.1-cudnn8-devel   | 18.04          |
-    | 11.1-cudnn8-devel   | 18.04          |
-    | 11.1.1-cudnn8-devel | 18.04          |
-
-  - build container
-
-    ```sh
-    make docker-build-base1-cuda11.2.2-cudnn8-devel-ubuntu18.04
-    ```
-
-    ```sh
-    make docker-build-base1 \
-      DOCKERFILE_DIR=./base1 \
-      CUDA_VERSION=9.2-cudnn7-devel \
-      UBUNTU_VERSION=18.04
-    ```
-
-  - run
-
-    ```sh
-    docker run \
-      --detach \
-      --restart=always \
-      --network=<network> \
-      --ip=172.20.0.XXX \
-      --gpus all \
-      --env NVIDIA_DRIVER_CAPABILITIES=all \
-      --env LOCAL_USER_NAME=$(id --user --name) \
-      --env LOCAL_USER_ID=$(id --user) \
-      --env LOCAL_GROUP_NAME=$(id --group --name) \
-      --env LOCAL_GROUP_ID=$(id --group) \
-      --volume ${HOME}/workdir:${HOME}/workdir/ \
-      --volume /media:/media \
-      --name=<container-name> \
-      <docker-image-name>
-    ```
-
-    - example
-
-      ```sh
-      docker run \
-          --detach \
-          --restart=always \
-          --network=pollenjp-docker-net \
-          --ip=172.20.0.XX \
-          --gpus all \
-          --env NVIDIA_DRIVER_CAPABILITIES=all \
-          --env LOCAL_USER_NAME=$(id --user --name) \
-          --env LOCAL_USER_ID=$(id --user) \
-          --env LOCAL_GROUP_NAME=$(id --group --name) \
-          --env LOCAL_GROUP_ID=$(id --group) \
-          --volume ${HOME}/workdir:${HOME}/workdir/ \
-          --volume /media:/media \
-          --name=pollen01 \
-          pollenjp-docker-base1-cuda11.2.2-cudnn8-devel-ubuntu18.04
-      ```
-
-### 3.2. minimum2
-
-- container で user 以下に pyenv を生成してから, user ディレクトリ以下のUID等を変更する
-
-## 4. test
+## pull containers from ghcr
 
 ```sh
-make create-test-docker-network
-test-docker-base1-build-and-run
+(
+  VERSION="0.1.4";
+  IP_ADDRESS="172.20.0.1";
+  CUDA_VERSION="9.2-cudnn7-devel";
+  UBUNTU_VERSION="18.04";
+  docker run \
+    --detach \
+    --restart always \
+    --network "pollenjp-docker-net" \
+    --ip "${IP_ADDRESS}" \
+    --gpus all \
+    --memory 14gb \
+    --shm-size 14gb \
+    --env NVIDIA_DRIVER_CAPABILITIES=all \
+    --env "LOCAL_USER_NAME=$(id --user --name)" \
+    --env "LOCAL_USER_ID=$(id --user)" \
+    --env "LOCAL_GROUP_NAME=$(id --group --name)" \
+    --env "LOCAL_GROUP_ID=$(id --group)" \
+    --volume "${HOME}/workdir:${HOME}/workdir/" \
+    --volume "${HOME}/.ssh:${HOME}/.ssh" \
+    --volume "${HOME}:/mnt/host" \
+    --volume "/media:/media" \
+    --name "pollenjp-docker${VERSION}-cuda${CUDA_VERSION}-ubuntu${UBUNTU_VERSION}" \
+    "ghcr.io/pollenjp/pollenjp-docker:${VERSION}-cuda${CUDA_VERSION}-ubuntu${UBUNTU_VERSION}"
+)
 ```
 
-## 5. network
+## Self-build
+
+### docker build
 
 ```sh
- % docker network create --driver=bridge --subnet=172.20.0.0/16 --gateway=172.20.255.254 xxx-net
-```
-
-docker imageをrunする際にネットワークと固定するIPを指定 (`--network="xxx-net" --ip=172.20.xxx.xxx`)
-
-注意
-
-- `--subnet`と`--gateway`を両方指定してnetworkを作成しないと以下のようなエラーがでる
-
-```sh
- % docker run --network="xxx-net" --ip=172.20.xxx.xxx ...
-docker: Error response from daemon: user specified IP address is supported only when connecting to networks with user configured subnets.
+(
+  CUDA_VERSION="9.2-cudnn7-devel";
+  UBUNTU_VERSION="18.04";
+  docker build \
+    --network=host \
+    --tag "pollenjp-docker-cuda${CUDA_VERSION}-ubuntu${UBUNTU_VERSION}" \
+    --build-arg CUDA_VERSION="${CUDA_VERSION}" \
+    --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" \
+    --file "ubuntu${UBUNTU_VERSION}/Dockerfile" \
+    "ubuntu${UBUNTU_VERSION}"
+)
 ```
