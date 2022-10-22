@@ -46,9 +46,9 @@ jobs:
           - ubuntu_version: 18.04
             cuda_version: 9.2-cudnn7-devel
           - ubuntu_version: 18.04
-            cuda_version: 10.2-cudnn7-devel-ubuntu18.04
+            cuda_version: 10.2-cudnn7-devel
           - ubuntu_version: 18.04
-            cuda_version: 10.2-cudnn8-devel-ubuntu18.04
+            cuda_version: 10.2-cudnn8-devel
           - ubuntu_version: 18.04
             cuda_version: 11.6.2-cudnn8-devel
           - ubuntu_version: 20.04
