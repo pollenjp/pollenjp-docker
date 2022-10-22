@@ -44,8 +44,6 @@ RUN \
     silversearcher-ag \
     # google noto font
     fonts-noto-cjk \
-    fonts-noto-cjk-extra \
-    fonts-noto-color-emoji \
     && \
     # Japanese
     locale-gen ja_JP.UTF-8 \
