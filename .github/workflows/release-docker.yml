@@ -25,12 +25,12 @@ jobs:
         id: version
         run: |
           version=$(head -n 1 < version.txt | tr -d '\n')
-          echo "::set-output name=version::${version}"
+          echo "version_tag=${version}" >> $GITHUB_ENV
 
       - name: tag check
         run: |
-          git tag v${{ steps.version.outputs.version }}
-          git push origin v${{ steps.version.outputs.version }}
+          git tag v${{ env.version_tag }}
+          git push origin v${{ env.version_tag }}
 
   docker-build-push:
     permissions:
@@ -45,10 +45,10 @@ jobs:
             cuda_version: 9.0-cudnn7-devel
           - ubuntu_version: 18.04
             cuda_version: 9.2-cudnn7-devel
-          - ubuntu_version: 18.04
-            cuda_version: 10.2-cudnn7-devel
-          - ubuntu_version: 18.04
-            cuda_version: 10.2-cudnn8-devel
+          # - ubuntu_version: 18.04
+          #   cuda_version: 10.2-cudnn7-devel
+          # - ubuntu_version: 18.04
+          #   cuda_version: 10.2-cudnn8-devel
           - ubuntu_version: 18.04
             cuda_version: 11.6.2-cudnn8-devel
           - ubuntu_version: 20.04
