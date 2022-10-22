@@ -40,63 +40,19 @@ jobs:
     strategy:
       max-parallel: 6
       matrix:
-        ubuntu_version:
-          - 18.04
-          - 20.04
-        cuda_version:
-          - 11.6.2-cudnn8-devel
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: version
-        id: version
-        run: |
-          version=$(head -n 1 < version.txt | tr -d '\n')
-          echo "::set-output name=version::${version}"
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: ./ubuntu${{ matrix.ubuntu_version }}
-          build-args: |
-            CUDA_VERSION=${{ matrix.cuda_version }}
-            UBUNTU_VERSION=${{ matrix.ubuntu_version }}
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest-cuda${{ matrix.cuda_version }}-ubuntu${{ matrix.ubuntu_version }}
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ steps.version.outputs.version }}-cuda${{ matrix.cuda_version }}-ubuntu${{ matrix.ubuntu_version }}
-
-  docker-build-push-ubuntu1804:
-    # only ubuntu18.04
-    permissions:
-      contents: read
-      packages: write
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 6
-      matrix:
-        ubuntu_version:
-          - 18.04
-        cuda_version:
-          - 9.2-cudnn7-devel
+        include:
+          - ubuntu_version: 16.04
+            cuda_version: 9.0-cudnn7-devel
+          - ubuntu_version: 18.04
+            cuda_version: 9.2-cudnn7-devel
+          - ubuntu_version: 18.04
+            cuda_version: 10.2-cudnn7-devel-ubuntu18.04
+          - ubuntu_version: 18.04
+            cuda_version: 10.2-cudnn8-devel-ubuntu18.04
+          - ubuntu_version: 18.04
+            cuda_version: 11.6.2-cudnn8-devel
+          - ubuntu_version: 20.04
+            cuda_version: 11.6.2-cudnn8-devel
 
     steps:
       - name: Checkout
