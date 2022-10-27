@@ -28,7 +28,7 @@ docker network create \
 
 ```sh
 (
-  VERSION="0.1.4";
+  VERSION="latest";
   IP_ADDRESS="172.20.0.1";
   CUDA_VERSION="9.2-cudnn7-devel";
   UBUNTU_VERSION="18.04";
