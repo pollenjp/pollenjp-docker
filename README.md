@@ -26,6 +26,8 @@ docker network create \
 
 ## pull containers from ghcr
 
+- `VERSION`: `latest` or release version like `0.1.9`
+
 ```sh
 (
   VERSION="latest";
