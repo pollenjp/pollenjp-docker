@@ -7,6 +7,7 @@
 - [ToC](#toc)
 - [docker network](#docker-network)
 - [pull containers from ghcr](#pull-containers-from-ghcr)
+- [ssh login](#ssh-login)
 - [Self-build](#self-build)
   - [docker build](#docker-build)
 
@@ -54,6 +55,15 @@ docker network create \
     --name "pollenjp-docker${VERSION}-cuda${CUDA_VERSION}-ubuntu${UBUNTU_VERSION}" \
     "ghcr.io/pollenjp/pollenjp-docker:${VERSION}-cuda${CUDA_VERSION}-ubuntu${UBUNTU_VERSION}"
 )
+```
+
+## ssh login
+
+- Default password is `password`
+- At first login, the password is required to be changed.
+
+```sh
+ssh "$(id --user --name)"@172.20.0.1
 ```
 
 ## Self-build
