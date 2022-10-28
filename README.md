@@ -1,10 +1,5 @@
 # pollenjp-docker
 
-- This repository provides VM-like docker containers.
-- You can access to the container through SSH
-- The container has a user having the any username and user ID.
-  - It may be useful to set the same username and user id as the host machine
-
 ## ToC
 
 <!-- TOC -->
@@ -12,7 +7,6 @@
 - [ToC](#toc)
 - [docker network](#docker-network)
 - [pull containers from ghcr](#pull-containers-from-ghcr)
-- [ssh login](#ssh-login)
 - [Self-build](#self-build)
   - [docker build](#docker-build)
 
@@ -32,12 +26,9 @@ docker network create \
 
 ## pull containers from ghcr
 
-- `VERSION`: `latest` or release version like `0.1.9`
-- You should wait about one minutes for some preprocessing by `entrypoint.sh`.
-
 ```sh
 (
-  VERSION="latest";
+  VERSION="0.1.4";
   IP_ADDRESS="172.20.0.1";
   CUDA_VERSION="9.2-cudnn7-devel";
   UBUNTU_VERSION="18.04";
@@ -61,15 +52,6 @@ docker network create \
     --name "pollenjp-docker${VERSION}-cuda${CUDA_VERSION}-ubuntu${UBUNTU_VERSION}" \
     "ghcr.io/pollenjp/pollenjp-docker:${VERSION}-cuda${CUDA_VERSION}-ubuntu${UBUNTU_VERSION}"
 )
-```
-
-## ssh login
-
-- Default password is `password`
-- At first login, the password is required to be changed.
-
-```sh
-ssh "$(id --user --name)"@172.20.0.1
 ```
 
 ## Self-build
