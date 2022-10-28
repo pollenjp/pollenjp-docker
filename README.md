@@ -1,5 +1,10 @@
 # pollenjp-docker
 
+- This repository provides VM-like docker containers.
+- You can access to the container through SSH
+- The container has a user having the any username and user ID.
+  - It may be useful to set the same username and user id as the host machine
+
 ## ToC
 
 <!-- TOC -->
@@ -28,6 +33,7 @@ docker network create \
 ## pull containers from ghcr
 
 - `VERSION`: `latest` or release version like `0.1.9`
+- You should wait about one minutes for some preprocessing by `entrypoint.sh`.
 
 ```sh
 (
